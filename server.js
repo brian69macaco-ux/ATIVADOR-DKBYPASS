@@ -2,7 +2,10 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
+const { ensurePublic } = require('./ensurePublic');
 const db = require('./db');
+
+ensurePublic(__dirname);
 
 const app = express();
 const PORT = process.env.PORT || 30022;
