@@ -57,8 +57,8 @@ app.get('/api/plans', (req, res) => {
 
 app.post('/api/request', (req, res) => {
   try {
-    const { uid, plan } = req.body;
-    const request = db.createRequest(uid, plan);
+    const { uid, plan, discord_nick } = req.body;
+    const request = db.createRequest(uid, plan, discord_nick);
     res.json({
       success: true,
       message: 'Pedido enviado! Aguarde a ativação.',
@@ -93,7 +93,7 @@ app.get('/api/admin/activations', requireAdmin, (req, res) => {
 app.post('/api/admin/requests/:id/approve', requireAdmin, async (req, res) => {
   try {
     const { request, activation } = db.approveRequest(req.params.id);
-    const legacy = await syncToLegacyServer(request.uid, request.plan_label);
+    const legacy = await syncToLegacyServer(request.uid, request.discord_nick || '');
     res.json({
       success: true,
       message: legacy.synced
