@@ -34,13 +34,17 @@ function getPlans() {
   return PLANS;
 }
 
-function createRequest(uid, plan) {
+function createRequest(uid, plan, discordNick = '') {
   if (!PLANS[plan]) {
     throw new Error('Plano inválido');
   }
   const trimmed = String(uid).trim();
   if (!trimmed) {
     throw new Error('ID é obrigatório');
+  }
+  const nick = String(discordNick).trim();
+  if (!nick) {
+    throw new Error('Nick do Discord é obrigatório');
   }
 
   const data = load();
@@ -54,6 +58,7 @@ function createRequest(uid, plan) {
   const request = {
     id: uuidv4(),
     uid: trimmed,
+    discord_nick: nick,
     plan,
     plan_label: PLANS[plan].label,
     status: 'pending',
@@ -93,6 +98,7 @@ function approveRequest(id) {
 
   const activation = {
     uid: request.uid,
+    discord_nick: request.discord_nick || '',
     plan: request.plan,
     plan_label: request.plan_label,
     approved_at: now(),
